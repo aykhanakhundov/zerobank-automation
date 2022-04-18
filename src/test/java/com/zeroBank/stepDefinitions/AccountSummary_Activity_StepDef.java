@@ -6,12 +6,9 @@ import static org.junit.Assert.*;
 import com.zeroBank.pages.AccountActivityPage;
 import com.zeroBank.pages.AccountSummaryPage;
 import com.zeroBank.pages.LoginPage;
-import com.zeroBank.pages.PayBillsPage;
 import com.zeroBank.pages.base.BasePage;
-import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
+import io.cucumber.java.en.*;
+import io.cucumber.java.en_old.Ac;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -22,7 +19,7 @@ public class AccountSummary_Activity_StepDef {
 
     BasePage page;
     Select select;
-
+    List<String> actualDatesGlobal;
     @Given("user is on {string}")
     public void user_is_on(String string) {
         page = pageObjectFactory(LOGIN_PAGE);
@@ -54,6 +51,7 @@ public class AccountSummary_Activity_StepDef {
         select = new Select(((AccountActivityPage)page).accountDropDown);
         page.clearObjects();
         assertEquals(expectedDefaultChosenOption, select.getFirstSelectedOption().getText());
+//        System.out.println("select.getFirstSelectedOption().getText() = " + select.getFirstSelectedOption().getText());
     }
 
     @And("verifies account dropdown has following options")
@@ -82,6 +80,78 @@ public class AccountSummary_Activity_StepDef {
     }
 
 
+    @When("user clicks on {string} on {string} page")
+    public void userClicksOnOnThePage(String clickable, String pageName) {
+        page = pageObjectFactory(pageName);
+        switch (pageName) {
+            case ACCOUNT_SUMMARY_PAGE:
+            ((AccountSummaryPage) page).clickOnSomething(clickable);
+            break;
+            case ACCOUNT_ACTIVITY_PAGE:
+                    ((AccountActivityPage) page).clickOnSomething(clickable);
+        }
+        page.clearObjects();
+    }
+
+    @When("user enters date range from {string} to {string}")
+    public void userEntersDateRangeFromTo(String fromDate, String toDate) {
+        page = pageObjectFactory(ACCOUNT_ACTIVITY_PAGE);
+        //BrowserUtils.waitFor(2);
+        ((AccountActivityPage)page).fromDateIB.sendKeys(fromDate);
+        ((AccountActivityPage)page).toDateIB.sendKeys(toDate);
+        page.clearObjects();
+    }
+
+    @Then("verifies results should only show transactions dates between {string} to {string}")
+    public void verifiesResultsShouldOnlyShowTransactionsDatesBetweenTo(String fromDate, String toDate) {
+        page = pageObjectFactory(ACCOUNT_ACTIVITY_PAGE);
+        List<String> actualDatesFromResults = new ArrayList<>();
+        for (WebElement eachDate : ((AccountActivityPage) page).datesFromResultTable) {
+            actualDatesFromResults.add(eachDate.getText());
+        }
+        actualDatesGlobal = actualDatesFromResults;
+        //System.out.println("actualDatesFromResults = " + actualDatesFromResults);
+        page.clearObjects();
+        assertTrue(page.datesInRange(fromDate, toDate, actualDatesFromResults));
+    }
+
+    @And("results should be sorted by most recent date")
+    public void resultsShouldBeSortedByMostRecentDate() {
+        assertTrue(page.datesSortedByMostRecent(actualDatesGlobal));
+    }
+
+    @And("results should not contain transaction dated {string}")
+    public void resultsShouldNotContainTransactionDated(String givenDate) {
+        assertFalse(actualDatesGlobal.contains(givenDate));
+    }
 
 
+
+    @When("user enters {string} to description box")
+    public void userEntersToDescriptionBox(String searchValue) {
+        page = pageObjectFactory(ACCOUNT_ACTIVITY_PAGE);
+        page.wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(((AccountActivityPage)page).descriptionIB)));
+        ((AccountActivityPage)page).descriptionIB.clear();
+        ((AccountActivityPage)page).descriptionIB.sendKeys(searchValue);
+        page.clearObjects();
+    }
+
+    @Then("verifies results should only show descriptions containing {string}")
+    public void verifiesResultsShouldOnlyShowDescriptionsContaining(String searchResult) {
+        page = pageObjectFactory(ACCOUNT_ACTIVITY_PAGE);
+        page.wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfAllElements(((AccountActivityPage) page).descriptionsFromResultTable)));
+        for (WebElement eachDescription : ((AccountActivityPage) page).descriptionsFromResultTable) {
+            assertTrue(eachDescription.getText().contains(searchResult));
+        }
+        page.clearObjects();
+    }
+
+    @But("results should not show descriptions containing {string}")
+    public void resultsShouldNotShowDescriptionsContaining(String irrelevantSearchResult) {
+        page = pageObjectFactory(ACCOUNT_ACTIVITY_PAGE);
+        for (WebElement eachDescription : ((AccountActivityPage) page).descriptionsFromResultTable) {
+            assertFalse(eachDescription.getText().contains(irrelevantSearchResult));
+        }
+        page.clearObjects();
+    }
 }

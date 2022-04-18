@@ -9,9 +9,9 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public abstract class BasePage {
     public BasePage() {
@@ -77,12 +77,12 @@ public abstract class BasePage {
     }
 
 
-    public int randomNumber(int from, int to){
+    public int randomNumber(int from, int to) {
         return faker.number().numberBetween(from, to);
     }
 
-    public String randomDate(){
-        return "" + randomNumber(1990,2025) + "-" + randomNumber(1,12) + "-" + randomNumber(1,28);
+    public String randomDate() {
+        return "" + randomNumber(1990, 2025) + "-" + randomNumber(1, 12) + "-" + randomNumber(1, 28);
     }
 
 
@@ -106,4 +106,96 @@ public abstract class BasePage {
     public void goTo(String pageName) {
         Driver.getDriver().get(getExpectedUrl(pageName));
     }
+
+
+    public String getExpectedTitle(String page) {
+        switch (page) {
+            case LOGIN_PAGE:
+                return "Zero - Log in";
+            case HOME_PAGE:
+                return "Zero - Personal Banking - Loans - Credit Cards";
+            case ONLINE_BANKING_PAGE:
+                return "Zero - Free Access to Online Banking";
+            case ACCOUNT_SUMMARY_PAGE:
+                return "Zero - Account Summary";
+            case ACCOUNT_ACTIVITY_PAGE:
+                return "Zero - Account Activity";
+            case PAY_BILLS_PAGE:
+                return "Zero - Pay Bills";
+            default:
+                throw new UnknownParameterException(page);
+        }
+    }
+
+    public String getYear(String date) {
+        return date.substring(0, 4);
+    }
+
+    public String getMonth(String date) {
+        return date.substring(5, 7);
+    }
+
+    public String getDay(String date) {
+        return date.substring(8);
+    }
+
+    public boolean datesInRange(String fromDate, String toDate, List<String> dates) {
+        boolean result = true;
+
+        for (String eachDate : dates) {
+            if (Integer.parseInt(getYear(eachDate)) < Integer.parseInt(getYear(fromDate))) {
+                return false;
+            }
+            if (Integer.parseInt(getYear(eachDate)) == Integer.parseInt(getYear(fromDate))) {
+                if (Integer.parseInt(getMonth(eachDate)) < Integer.parseInt(getMonth(fromDate))) {
+                    return false;
+                }
+            }
+            if (Integer.parseInt(getYear(eachDate)) == Integer.parseInt(getYear(fromDate))) {
+                if (Integer.parseInt(getMonth(eachDate)) == Integer.parseInt(getMonth(fromDate))) {
+                    if (Integer.parseInt(getDay(eachDate)) < Integer.parseInt(getDay(fromDate))) {
+                        return false;
+                    }
+                }
+            }
+
+            if (Integer.parseInt(getYear(eachDate)) > Integer.parseInt(getYear(toDate))) {
+                return false;
+            }
+            if (Integer.parseInt(getYear(eachDate)) == Integer.parseInt(getYear(toDate))) {
+                if (Integer.parseInt(getMonth(eachDate)) > Integer.parseInt(getMonth(toDate))) {
+                    return false;
+                }
+            }
+            if (Integer.parseInt(getYear(eachDate)) == Integer.parseInt(getYear(toDate))) {
+                if (Integer.parseInt(getMonth(eachDate)) == Integer.parseInt(getMonth(toDate))) {
+                    if (Integer.parseInt(getDay(eachDate)) > Integer.parseInt(getDay(toDate))) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public boolean datesSortedByMostRecent(List<String> dates) {
+        List<Date> datesInDateFormat = new ArrayList<>();
+        for (String eachDate : dates) {
+            try {
+                datesInDateFormat.add(new SimpleDateFormat("yyyy-MM-dd").parse(eachDate));
+            } catch (ParseException e) {
+            }
+        }
+        for (int i = 0; i < datesInDateFormat.size(); i++) {
+            System.out.println("datesInDateFormat.get(i) = " + datesInDateFormat.get(i));
+            if ((i + 1) < datesInDateFormat.size()) {
+                if (datesInDateFormat.get(i).before(datesInDateFormat.get(i + 1))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
 }
