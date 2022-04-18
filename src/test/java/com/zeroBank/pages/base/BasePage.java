@@ -9,6 +9,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ public abstract class BasePage {
     public static final String ONLINE_BANKING_PAGE = "Online Banking";
     public static final String ACCOUNT_SUMMARY_PAGE = "Account Summary";
     public static final String ACCOUNT_ACTIVITY_PAGE = "Account Activity";
+    public static final String PAY_BILLS_PAGE = "Pay Bills";
 
 
     private static final Map<String, BasePage> PAGE_OBJECT_MAP = new HashMap<>();
@@ -51,6 +53,9 @@ public abstract class BasePage {
                 case ACCOUNT_ACTIVITY_PAGE:
                     PAGE_OBJECT_MAP.put(page, new AccountActivityPage());
                     return PAGE_OBJECT_MAP.get(page);
+                case PAY_BILLS_PAGE:
+                    PAGE_OBJECT_MAP.put(page, new PayBillsPage());
+                    return PAGE_OBJECT_MAP.get(page);
                 default:
                     throw new PageNotDefinedException(page);
             }
@@ -72,6 +77,15 @@ public abstract class BasePage {
     }
 
 
+    public int randomNumber(int from, int to){
+        return faker.number().numberBetween(from, to);
+    }
+
+    public String randomDate(){
+        return "" + randomNumber(1990,2025) + "-" + randomNumber(1,12) + "-" + randomNumber(1,28);
+    }
+
+
     public String getExpectedUrl(String page) {
         switch (page) {
             case LOGIN_PAGE:
@@ -82,6 +96,8 @@ public abstract class BasePage {
                 return "http://zero.webappsecurity.com/bank/account-summary.html";
             case ACCOUNT_ACTIVITY_PAGE:
                 return "http://zero.webappsecurity.com/bank/account-activity.html";
+            case PAY_BILLS_PAGE:
+                return "http://zero.webappsecurity.com/bank/pay-bills.html";
             default:
                 throw new UnknownParameterException(page);
         }

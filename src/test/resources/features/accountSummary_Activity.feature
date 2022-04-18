@@ -1,5 +1,5 @@
 @ui
-Feature: Main pages verification
+Feature: Account summary, account activity verification
 
   Background:
     Given user is on "Home Page"
@@ -29,4 +29,3 @@ Feature: Main pages verification
       | Description |
       | Deposit     |
       | Withdrawal  |
-
