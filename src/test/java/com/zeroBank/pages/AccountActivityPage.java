@@ -49,6 +49,15 @@ public class AccountActivityPage extends BasePage {
     @FindBy(xpath = "//div[@id='filtered_transactions_for_account']//tbody//td[2]")
     public List<WebElement> descriptionsFromResultTable;
 
+    @FindBy(xpath = "//div[@id='filtered_transactions_for_account']//tbody//td[3]")
+    public List<WebElement> depositsFromResultsTable;
+
+    @FindBy(xpath = "//div[@id='filtered_transactions_for_account']//tbody//td[4]")
+    public List<WebElement> withdrawalsFromResultsTable;
+
+    @FindBy(id = "aa_type")
+    public WebElement transactionTypeDropDown;
+
 
 
 
@@ -77,5 +86,24 @@ public class AccountActivityPage extends BasePage {
     public void clickOnSomething(String clickable) {
         getElement(clickable).click();
     }
+
+    public boolean notAllCellsNull(List<WebElement> list){
+        for (WebElement eachElement : list) {
+            if(!eachElement.getText().equals("")){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean allCellsAreNull(List<WebElement> list){
+        for (WebElement eachElement : list) {
+            if(eachElement.getText().equals("")){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }

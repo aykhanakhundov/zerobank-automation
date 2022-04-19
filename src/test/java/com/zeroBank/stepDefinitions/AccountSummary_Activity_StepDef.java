@@ -7,8 +7,8 @@ import com.zeroBank.pages.AccountActivityPage;
 import com.zeroBank.pages.AccountSummaryPage;
 import com.zeroBank.pages.LoginPage;
 import com.zeroBank.pages.base.BasePage;
+import com.zeroBank.utilities.BrowserUtils;
 import io.cucumber.java.en.*;
-import io.cucumber.java.en_old.Ac;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -20,10 +20,11 @@ public class AccountSummary_Activity_StepDef {
     BasePage page;
     Select select;
     List<String> actualDatesGlobal;
+
     @Given("user is on {string}")
     public void user_is_on(String string) {
         page = pageObjectFactory(LOGIN_PAGE);
-        ((LoginPage)page).login();
+        ((LoginPage) page).login();
         page.clearObjects();
     }
 
@@ -44,11 +45,10 @@ public class AccountSummary_Activity_StepDef {
     }
 
 
-
     @And("verifies account dropdown default chosen option is {string}")
     public void verifiesAccountDropdownDefaultChosenOptionIs(String expectedDefaultChosenOption) {
         page = pageObjectFactory(ACCOUNT_ACTIVITY_PAGE);
-        select = new Select(((AccountActivityPage)page).accountDropDown);
+        select = new Select(((AccountActivityPage) page).accountDropDown);
         page.clearObjects();
         assertEquals(expectedDefaultChosenOption, select.getFirstSelectedOption().getText());
 //        System.out.println("select.getFirstSelectedOption().getText() = " + select.getFirstSelectedOption().getText());
@@ -57,7 +57,7 @@ public class AccountSummary_Activity_StepDef {
     @And("verifies account dropdown has following options")
     public void verifiesAccountDropdownHasFollowingOptions(List<String> expectedDropDownOptionsList) {
         page = pageObjectFactory(ACCOUNT_ACTIVITY_PAGE);
-        select = new Select(((AccountActivityPage)page).accountDropDown);
+        select = new Select(((AccountActivityPage) page).accountDropDown);
         page.clearObjects();
         Set<String> expectedDropDownOptionsSet = new LinkedHashSet<>(expectedDropDownOptionsList);
         Set<String> actualDropDownOptions = new LinkedHashSet<>();
@@ -85,10 +85,10 @@ public class AccountSummary_Activity_StepDef {
         page = pageObjectFactory(pageName);
         switch (pageName) {
             case ACCOUNT_SUMMARY_PAGE:
-            ((AccountSummaryPage) page).clickOnSomething(clickable);
-            break;
+                ((AccountSummaryPage) page).clickOnSomething(clickable);
+                break;
             case ACCOUNT_ACTIVITY_PAGE:
-                    ((AccountActivityPage) page).clickOnSomething(clickable);
+                ((AccountActivityPage) page).clickOnSomething(clickable);
         }
         page.clearObjects();
     }
@@ -97,8 +97,8 @@ public class AccountSummary_Activity_StepDef {
     public void userEntersDateRangeFromTo(String fromDate, String toDate) {
         page = pageObjectFactory(ACCOUNT_ACTIVITY_PAGE);
         //BrowserUtils.waitFor(2);
-        ((AccountActivityPage)page).fromDateIB.sendKeys(fromDate);
-        ((AccountActivityPage)page).toDateIB.sendKeys(toDate);
+        ((AccountActivityPage) page).fromDateIB.sendKeys(fromDate);
+        ((AccountActivityPage) page).toDateIB.sendKeys(toDate);
         page.clearObjects();
     }
 
@@ -126,13 +126,12 @@ public class AccountSummary_Activity_StepDef {
     }
 
 
-
     @When("user enters {string} to description box")
     public void userEntersToDescriptionBox(String searchValue) {
         page = pageObjectFactory(ACCOUNT_ACTIVITY_PAGE);
-        page.wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(((AccountActivityPage)page).descriptionIB)));
-        ((AccountActivityPage)page).descriptionIB.clear();
-        ((AccountActivityPage)page).descriptionIB.sendKeys(searchValue);
+        page.wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(((AccountActivityPage) page).descriptionIB)));
+        ((AccountActivityPage) page).descriptionIB.clear();
+        ((AccountActivityPage) page).descriptionIB.sendKeys(searchValue);
         page.clearObjects();
     }
 
@@ -151,6 +150,38 @@ public class AccountSummary_Activity_StepDef {
         page = pageObjectFactory(ACCOUNT_ACTIVITY_PAGE);
         for (WebElement eachDescription : ((AccountActivityPage) page).descriptionsFromResultTable) {
             assertFalse(eachDescription.getText().contains(irrelevantSearchResult));
+        }
+        page.clearObjects();
+    }
+
+    @Then("results should show at least one result under {string}")
+    public void resultsShouldShowAtLeastOneResultUnder(String columName) {
+        page = pageObjectFactory(ACCOUNT_ACTIVITY_PAGE);
+
+        if (columName.equals("Deposit")) {
+            assertTrue(((AccountActivityPage) page).notAllCellsNull(((AccountActivityPage) page).depositsFromResultsTable));
+        } else {
+            assertTrue(((AccountActivityPage) page).notAllCellsNull(((AccountActivityPage) page).withdrawalsFromResultsTable));
+        }
+        page.clearObjects();
+    }
+
+    @When("user selects type {string}")
+    public void userSelectsType(String transactionType) {
+        page = pageObjectFactory(ACCOUNT_ACTIVITY_PAGE);
+        page.wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOf(((AccountActivityPage) page).transactionTypeDropDown)));
+        select = new Select(((AccountActivityPage) page).transactionTypeDropDown);
+        select.selectByVisibleText(transactionType);
+        page.clearObjects();
+    }
+
+    @But("results should show no result under {string}")
+    public void resultsShouldShowNoResultUnder(String columnName) {
+        page = pageObjectFactory(ACCOUNT_ACTIVITY_PAGE);
+        if (columnName.equals("Withdrawal")) {
+            assertTrue(((AccountActivityPage) page).allCellsAreNull(((AccountActivityPage) page).withdrawalsFromResultsTable));
+        } else {
+            assertTrue(((AccountActivityPage) page).allCellsAreNull(((AccountActivityPage) page).depositsFromResultsTable));
         }
         page.clearObjects();
     }
