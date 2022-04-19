@@ -1,7 +1,5 @@
 package com.zeroBank.stepDefinitions;
 
-import com.zeroBank.utilities.ConfigurationReader;
-import com.zeroBank.utilities.DB;
 import com.zeroBank.utilities.Driver;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
@@ -28,16 +26,5 @@ public class Hook {
         Driver.getDriver().manage().deleteAllCookies();
 
         Driver.closeDriver();
-    }
-
-    @Before("@db")
-    public void setupDB() {
-        DB.createConnection(ConfigurationReader.getProperty("jdbcURL"),
-                "library2_client", "6s2LQQTjBcGFfDhY");
-    }
-
-    @After("@db")
-    public void destroyConnection() {
-        DB.destroy();
     }
 }
