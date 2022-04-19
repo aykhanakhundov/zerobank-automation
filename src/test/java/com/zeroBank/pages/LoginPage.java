@@ -8,8 +8,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 public class LoginPage extends BasePage {
-    public LoginPage(){
-        PageFactory.initElements(Driver.getDriver(),this);
+    public LoginPage() {
+        PageFactory.initElements(Driver.getDriver(), this);
     }
 
     @FindBy(id = "user_login")
@@ -24,27 +24,27 @@ public class LoginPage extends BasePage {
     @FindBy(xpath = "//div[@class='alert alert-error']")
     public WebElement invalidCredErrorMsg;
 
-    public void loginValid(){
+    public void loginValid() {
         usernameIB.sendKeys(ConfigurationReader.getProperty("username"));
         passwordIB.sendKeys(ConfigurationReader.getProperty("password"));
         signInBtn.click();
     }
 
 
-    public void loginInvalid(){
+    public void loginInvalid() {
         usernameIB.sendKeys(randomLetters(10));
         passwordIB.sendKeys(randomLetters(10));
         signInBtn.click();
     }
 
 
-    public void loginWithCred(String username, String password){
+    public void loginWithCred(String username, String password) {
         usernameIB.sendKeys(username);
         passwordIB.sendKeys(password);
         signInBtn.click();
     }
 
-    public void login(){
+    public void login() {
         Driver.getDriver().get(ConfigurationReader.getProperty("env"));
         usernameIB.sendKeys(ConfigurationReader.getProperty("username"));
         passwordIB.sendKeys(ConfigurationReader.getProperty("password"));
@@ -52,10 +52,9 @@ public class LoginPage extends BasePage {
         Driver.getDriver().navigate().back();
     }
 
-    public boolean invalidCredErrorMsgDisplayed(){
+    public boolean invalidCredErrorMsgDisplayed() {
         return invalidCredErrorMsg.isDisplayed();
     }
-
 
 
 }

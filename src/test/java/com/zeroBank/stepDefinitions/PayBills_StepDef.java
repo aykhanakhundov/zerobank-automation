@@ -2,13 +2,15 @@ package com.zeroBank.stepDefinitions;
 
 import com.zeroBank.pages.PayBillsPage;
 import com.zeroBank.pages.base.BasePage;
-import com.zeroBank.utilities.BrowserUtils;
 import com.zeroBank.utilities.Driver;
 import io.cucumber.java.en.*;
 import org.junit.Assert;
-import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static com.zeroBank.pages.base.BasePage.PAY_BILLS_PAGE;
@@ -18,6 +20,7 @@ import static org.junit.Assert.*;
 public class PayBills_StepDef {
 
     BasePage page;
+    Select select;
 
     @And("user completes {string} pay operation")
     public void userCompletesPayOperation(String testType) {
@@ -83,5 +86,43 @@ public class PayBills_StepDef {
         page = pageObjectFactory(PAY_BILLS_PAGE);
         assertEquals(((PayBillsPage) page).payeeCreatedMsg.getText(), expectedMsg);
         page.clearObjects();
+    }
+
+
+    @Then("following currencies should be available in currency dropdown")
+    public void following_currencies_should_be_available_in_currency_dropdown(List<String> expectedAvailableCurrencyList) {
+        page = pageObjectFactory(PAY_BILLS_PAGE);
+        select = new Select(((PayBillsPage)page).currencyDropDown);
+        List<String> actualAvailableCurrencyList = new ArrayList<>();
+        for (WebElement eachOption : select.getOptions()) {
+            actualAvailableCurrencyList.add(eachOption.getText());
+        }
+        actualAvailableCurrencyList.remove(0);
+        //doesn't work properly with parallel testing Jenkins, but good for list assertions
+        // shows exactly what is wrong, needs Jupiter dependency
+        //assertIterableEquals(expectedAvailableCurrencyList, actualAvailableCurrencyList);
+        assertEquals(expectedAvailableCurrencyList, actualAvailableCurrencyList);
+        page.clearObjects();
+    }
+
+
+    @When("user tries to calculate cost without selecting {string}")
+    public void userTriesToCalculateCostWithoutSelectingCurrency(String entry) {
+        page = pageObjectFactory(PAY_BILLS_PAGE);
+        if(entry.equals("Amount")){
+            ((PayBillsPage)page).currencyRadioBtn.click();
+            ((PayBillsPage)page).calculateCostsBtn.click();
+        }
+        if(entry.equals("Currency")){
+            ((PayBillsPage)page).amountForCurrencyIB.sendKeys("" + page.randomNumber(100, 1000));
+            ((PayBillsPage)page).calculateCostsBtn.click();
+        }
+        page.clearObjects();
+    }
+
+    @Then("{string} should be displayed as error message")
+    public void errorMessageShouldBeDisplayed(String expectedErrorMsg) {
+        assertEquals(expectedErrorMsg, Driver.getDriver().switchTo().alert().getText());
+        Driver.getDriver().switchTo().alert().accept();
     }
 }

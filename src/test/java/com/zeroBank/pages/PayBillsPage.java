@@ -19,6 +19,8 @@ public class PayBillsPage extends BasePage {
     public static final String PAYEE_DETAILS_IB = "Payee Details IB";
     public static final String SUBMIT_NEW_PAYEE = "Submit New Payee";
     public static final String PAYEE_CREATED_MSG = "Payee Created Msg";
+    public static final String PURCHASE_FOREIGN_CURRENCY_BTN = "Purchase Foreign Currency";
+    public static final String CALCULATE_COSTS_BTN = "Calculate Costs";
 
 
     @FindBy(id = "sp_amount")
@@ -57,6 +59,21 @@ public class PayBillsPage extends BasePage {
     @FindBy(xpath = "//div[@id='alert_content']")
     public WebElement payeeCreatedMsg;
 
+    @FindBy(xpath = "//a[.='Purchase Foreign Currency']")
+    public WebElement purchaseForeignCurrencyBtn;
+
+    @FindBy(id = "pc_currency")
+    public WebElement currencyDropDown;
+
+    @FindBy(id = "pc_inDollars_true")
+    public WebElement currencyRadioBtn;
+
+    @FindBy(id = "pc_calculate_costs")
+    public WebElement calculateCostsBtn;
+
+    @FindBy(id = "pc_amount")
+    public WebElement amountForCurrencyIB;
+
 
     public void paySuccessfully() {
         amountIB.sendKeys("" + randomNumber(1, 1000));
@@ -88,6 +105,10 @@ public class PayBillsPage extends BasePage {
                 return submitNewPayee;
             case PAYEE_CREATED_MSG:
                 return payeeCreatedMsg;
+            case PURCHASE_FOREIGN_CURRENCY_BTN:
+                return purchaseForeignCurrencyBtn;
+            case CALCULATE_COSTS_BTN:
+                return calculateCostsBtn;
             default:
                 throw new NotElementDefinedException(element);
         }

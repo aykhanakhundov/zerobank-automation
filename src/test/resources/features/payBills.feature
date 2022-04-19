@@ -3,7 +3,7 @@ Feature: Pay bills page verification
 
   Background:
     Given user is on "Home Page"
-    When user goes to "Pay Bills" page
+    And user goes to "Pay Bills" page
 
   Scenario: Verify page title and successful pay operation
     Then verifies page title is "Zero - Pay Bills"
@@ -17,8 +17,11 @@ Feature: Pay bills page verification
     And user completes "No Date Selected" pay operation
     Then verifies "Please fill out this field!" message is displayed for "No Date Selected"
 
-  Scenario: Verify wrong date/amount is not accepted
+
+  Scenario: Verify wrong date is not accepted
     And user completes "Wrong Date" pay operation
     Then user verifies "Wrong Date" is not accepted
+
+  Scenario: Verify wrong amount is not accepted
     And user completes "Wrong Amount" pay operation
     Then user verifies "Wrong Amount" is not accepted

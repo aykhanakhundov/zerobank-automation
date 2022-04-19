@@ -8,13 +8,11 @@ import static org.junit.Assert.*;
 
 import com.zeroBank.pages.OnlineBankingPage;
 import com.zeroBank.pages.base.BasePage;
-import com.zeroBank.utilities.BrowserUtils;
 import com.zeroBank.utilities.ConfigurationReader;
 import com.zeroBank.utilities.Driver;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.openqa.selenium.support.PageFactory;
 
 public class Login_StepDef {
 
@@ -37,10 +35,10 @@ public class Login_StepDef {
             ((HomePage) page).onlineBankingPageBtn.click();
             page = BasePage.pageObjectFactory(ONLINE_BANKING_PAGE);
             ((OnlineBankingPage) page).accountSummaryLink.click();
-        }else if(testType.equals("Invalid")){
-            ((LoginPage)page).loginInvalid();
-        }else{
-            ((LoginPage)page).loginWithCred("  ", "  ");
+        } else if (testType.equals("Invalid")) {
+            ((LoginPage) page).loginInvalid();
+        } else {
+            ((LoginPage) page).loginWithCred("  ", "  ");
         }
         page.clearObjects();
     }
@@ -54,8 +52,8 @@ public class Login_StepDef {
     @Then("verifies {string} is displayed")
     public void verifiesIsDisplayed(String expectedErrorMsg) {
         page = pageObjectFactory(LOGIN_PAGE);
-        assertTrue(((LoginPage)page).invalidCredErrorMsgDisplayed());
-        assertEquals(expectedErrorMsg, ((LoginPage)page).invalidCredErrorMsg.getText());
+        assertTrue(((LoginPage) page).invalidCredErrorMsgDisplayed());
+        assertEquals(expectedErrorMsg, ((LoginPage) page).invalidCredErrorMsg.getText());
         page.clearObjects();
     }
 }

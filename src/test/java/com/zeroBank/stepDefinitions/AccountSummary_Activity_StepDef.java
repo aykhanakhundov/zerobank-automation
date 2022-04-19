@@ -8,7 +8,6 @@ import com.zeroBank.pages.AccountSummaryPage;
 import com.zeroBank.pages.LoginPage;
 import com.zeroBank.pages.PayBillsPage;
 import com.zeroBank.pages.base.BasePage;
-import com.zeroBank.utilities.BrowserUtils;
 import io.cucumber.java.en.*;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -92,7 +91,7 @@ public class AccountSummary_Activity_StepDef {
                 ((AccountActivityPage) page).clickOnSomething(clickable);
                 break;
             case PAY_BILLS_PAGE:
-                ((PayBillsPage)page).clickOnSomething(clickable);
+                ((PayBillsPage) page).clickOnSomething(clickable);
                 break;
         }
         page.clearObjects();

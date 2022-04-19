@@ -10,8 +10,8 @@ import org.openqa.selenium.support.PageFactory;
 import java.util.List;
 
 public class AccountSummaryPage extends BasePage {
-    public AccountSummaryPage(){
-        PageFactory.initElements(Driver.getDriver(),this);
+    public AccountSummaryPage() {
+        PageFactory.initElements(Driver.getDriver(), this);
     }
 
     public static final String SAVINGS_LINK = "Savings Link";
@@ -19,9 +19,6 @@ public class AccountSummaryPage extends BasePage {
     public static final String CHECKING_LINK = "Checking Link";
     public static final String CREDIT_CARD_LINK = "Credit Card Link";
     public static final String LOAN_LINK = "Loan Link";
-
-
-
 
 
     @FindBy(tagName = "h2")
@@ -41,7 +38,6 @@ public class AccountSummaryPage extends BasePage {
 
     @FindBy(xpath = "//a[.='Loan']")
     public WebElement loanLink;
-
 
 
     public WebElement getElement(String clickable) {

@@ -16,5 +16,4 @@ public class OnlineBankingPage extends BasePage {
     public WebElement accountSummaryLink;
 
 
-
 }

@@ -31,13 +31,13 @@ public class Hook {
     }
 
     @Before("@db")
-    public void setupDB(){
+    public void setupDB() {
         DB.createConnection(ConfigurationReader.getProperty("jdbcURL"),
-                "library2_client",  "6s2LQQTjBcGFfDhY");
+                "library2_client", "6s2LQQTjBcGFfDhY");
     }
 
     @After("@db")
-    public void destroyConnection(){
+    public void destroyConnection() {
         DB.destroy();
     }
 }

@@ -82,7 +82,6 @@ public class AccountActivityPage extends BasePage {
     }
 
 
-
     public void clickOnSomething(String clickable) {
         getElement(clickable).click();
     }
