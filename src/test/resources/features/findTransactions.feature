@@ -47,12 +47,3 @@ Feature: Find Transactions in Account Activity
     And user clicks on "Find" on "Account Activity" page
     Then results should show at least one result under "Withdrawal"
     But results should show no result under "Deposit"
-
-
-
-
-
-
-
-
-

@@ -2,14 +2,18 @@ package com.zeroBank.stepDefinitions;
 
 import com.zeroBank.pages.PayBillsPage;
 import com.zeroBank.pages.base.BasePage;
+import com.zeroBank.utilities.BrowserUtils;
+import com.zeroBank.utilities.Driver;
 import io.cucumber.java.en.*;
 import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import java.util.Map;
 
 import static com.zeroBank.pages.base.BasePage.PAY_BILLS_PAGE;
 import static com.zeroBank.pages.base.BasePage.pageObjectFactory;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class PayBills_StepDef {
 
@@ -54,10 +58,30 @@ public class PayBills_StepDef {
             //check this one
             page.wait.until(ExpectedConditions.visibilityOf(((PayBillsPage) page).successfulPaymentMsg));
             if (((PayBillsPage) page).successfulPaymentMsg.isDisplayed()) {
-               // System.err.println("Sending money with wrong amount is possible!!!");
+                // System.err.println("Sending money with wrong amount is possible!!!");
                 Assert.fail("Sending money with wrong amount is possible!!!");
             }
         }
+        page.clearObjects();
+    }
+
+
+    @When("fills out payee using following information")
+    public void fills_out_payee_using_following_information(Map<String, String> mapOfRequiredFields) {
+        //System.out.println("mapOfRequiredFields = " + mapOfRequiredFields);
+        page = pageObjectFactory(PAY_BILLS_PAGE);
+        ((PayBillsPage) page).payeeNameIB.sendKeys(mapOfRequiredFields.get("Payee Name"));
+        ((PayBillsPage) page).payeeAddressIB.sendKeys(mapOfRequiredFields.get("Payee Address"));
+        ((PayBillsPage) page).payeeAccountIB.sendKeys(mapOfRequiredFields.get("Account"));
+        ((PayBillsPage) page).payeeDetailsIB.sendKeys(mapOfRequiredFields.get("Payee Details"));
+        page.clearObjects();
+    }
+
+
+    @Then("{string} message should be displayed")
+    public void message_should_be_displayed(String expectedMsg) {
+        page = pageObjectFactory(PAY_BILLS_PAGE);
+        assertEquals(((PayBillsPage) page).payeeCreatedMsg.getText(), expectedMsg);
         page.clearObjects();
     }
 }
