@@ -1,6 +1,6 @@
 node {
     stage('Clone code') {
-        git 'https://github.com/aykhanakhundov/tryCloud.git'
+        git 'https://github.com/aykhanakhundov/zeroBank.git'
     }
 
     stage('Run tests'){
